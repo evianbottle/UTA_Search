@@ -121,22 +121,7 @@ public class MainActivity extends Activity {
                 Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
                 shortcut.getWindowToken(), 0);
 
-        //Segment of code to update the sharedPreferences
-        String searchListString = "";
-        String shortcutListString = "";
-
-        //Creates strings for each list, separates items with / so we can split it up later
-        for(int i = 0; i < searchList.size(); i++){
-            searchListString += searchList.get(i) + "/";
-            shortcutListString += shortcutList.get(i) + "/";
-        }
-        //Creating the editor and putting the two strings into the preferences
-        SharedPreferences sharedPreference = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreference.edit();
-        editor.putString("SearchList", searchListString);
-        editor.putString("ShortcutList", shortcutListString);
-        editor.commit();
-        //End of segment of code to update sharedPreferences
+       sharedPrefs();
 
     }//End of onClick
 
@@ -157,6 +142,7 @@ public class MainActivity extends Activity {
         shortcutList.remove(position);
         searchList.remove(position);
         adapter.notifyDataSetChanged();
+        sharedPrefs();
 
     } //End of deleteListItem
 
@@ -221,24 +207,30 @@ public class MainActivity extends Activity {
         alertDialog.show(); //And show it
     } //End of createBuilder
 
+    public void sharedPrefs(){
 
-    public void onStop(){
-        super.onStop();
-
-        //Saving sharedPreferences when app is closed
+        //Strings to be passed to sharedPreferences
         String searchListString = "";
         String shortcutListString = "";
 
-
+        //Adding items to Strings with / in between to split up later
         for(int i = 0; i < searchList.size(); i++){
             searchListString += searchList.get(i) + "/";
             shortcutListString += shortcutList.get(i) + "/";
         }
 
+        //Putting the Strings to the sharedPreferences
         SharedPreferences sharedPreference = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreference.edit();
         editor.putString("SearchList", searchListString);
         editor.putString("ShortcutList", shortcutListString);
         editor.commit();
+    } //End of SharedPrefs
+
+    public void onStop(){
+        super.onStop();
+
+        //Saving sharedPreferences when app is closed
+        sharedPrefs();
     }
 }
